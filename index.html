@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Lo siento</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+}
+
+body{
+    background:#0b1020;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+#game{
+    position:relative;
+    width:100vw;
+    height:100vh;
+    overflow:hidden;
+    background:
+        linear-gradient(
+            to bottom,
+            #080d1d 0%,
+            #101936 48%,
+            #172344 70%,
+            #24304a 100%
+        );
+}
+
+/* =========================
+   ESTRELLAS
+========================= */
+
+.star{
+    position:absolute;
+    width:3px;
+    height:3px;
+    background:#fff;
+    box-shadow:0 0 4px #fff;
+    image-rendering:pixelated;
+}
+
+.s1{left:7%;top:12%}
+.s2{left:14%;top:25%}
+.s3{left:22%;top:9%}
+.s4{left:31%;top:18%}
+.s5{left:39%;top:7%}
+.s6{left:48%;top:23%}
+.s7{left:57%;top:11%}
+.s8{left:66%;top:20%}
+.s9{left:75%;top:8%}
+.s10{left:84%;top:26%}
+.s11{left:92%;top:13%}
+.s12{left:45%;top:35%}
+.s13{left:11%;top:38%}
+.s14{left:70%;top:34%}
+
+/* =========================
+   LUNA
+========================= */
+
+.moon{
+    position:absolute;
+    width:82px;
+    height:82px;
+    right:11%;
+    top:9%;
+    background:#f4e7b0;
+    border-radius:50%;
+    box-shadow:
+        0 0 18px rgba(244,231,176,.25),
+        0 0 35px rgba(244,231,176,.12);
+}
+
+.moon::after{
+    content:"";
+    position:absolute;
+    width:82px;
+    height:82px;
+    left:-18px;
+    top:-7px;
+    border-radius:50%;
+    background:#0b1020;
+}
+
+/* =========================
+   NUBES
+========================= */
+
+.cloud{
+    position:absolute;
+    width:120px;
+    height:24px;
+    background:rgba(145,160,187,.15);
+}
+
+.cloud::before,
+.cloud::after{
+    content:"";
+    position:absolute;
+    background:inherit;
+}
+
+.cloud::before{
+    width:55px;
+    height:35px;
+    left:15px;
+    bottom:0;
+}
+
+.cloud::after{
+    width:65px;
+    height:30px;
+    right:12px;
+    bottom:0;
+}
+
+.cloud1{
+    top:20%;
+    left:4%;
+}
+
+.cloud2{
+    top:29%;
+    right:23%;
+    transform:scale(.75);
+}
+
+/* =========================
+   MONTAÑAS
+========================= */
+
+.mountains{
+    position:absolute;
+    left:0;
+    bottom:27%;
+    width:100%;
+    height:35%;
+}
+
+.mountain{
+    position:absolute;
+    bottom:0;
+    width:0;
+    height:0;
+    border-left:150px solid transparent;
+    border-right:150px solid transparent;
+    border-bottom:250px solid #11182c;
+}
+
+.m1{
+    left:-70px;
+}
+
+.m2{
+    left:16%;
+    transform:scale(1.25);
+    border-bottom-color:#141d35;
+}
+
+.m3{
+    right:8%;
+    transform:scale(1.35);
+    border-bottom-color:#10172b;
+}
+
+.m4{
+    right:-130px;
+    transform:scale(.95);
+    border-bottom-color:#151d32;
+}
+
+/* =========================
+   ÁRBOLES
+========================= */
+
+.tree{
+    position:absolute;
+    bottom:25%;
+    width:18px;
+    height:120px;
+    background:#17120f;
+}
+
+.tree::before,
+.tree::after{
+    content:"";
+    position:absolute;
+    background:#102218;
+}
+
+.tree::before{
+    width:78px;
+    height:85px;
+    left:-30px;
+    top:-60px;
+    clip-path:polygon(
+        50% 0,
+        100% 100%,
+        0 100%
+    );
+}
+
+.tree::after{
+    width:62px;
+    height:70px;
+    left:-22px;
+    top:-90px;
+    clip-path:polygon(
+        50% 0,
+        100% 100%,
+        0 100%
+    );
+}
+
+.tree1{left:6%;transform:scale(.75)}
+.tree2{left:18%;transform:scale(1)}
+.tree3{right:18%;transform:scale(.8)}
+.tree4{right:6%;transform:scale(1.15)}
+
+/* =========================
+   SUELO
+========================= */
+
+.ground{
+    position:absolute;
+    left:0;
+    bottom:0;
+    width:100%;
+    height:28%;
+    background:
+        linear-gradient(
+            to bottom,
+            #263a28 0 9px,
+            #18251d 9px 100%
+        );
+    box-shadow:inset 0 8px 0 #314b2d;
+}
+
+.grass{
+    position:absolute;
+    bottom:27%;
+    left:0;
+    width:100%;
+    height:13px;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #304d30 0 13px,
+            #263f29 13px 26px
+        );
+}
+
+/* =========================
+   ZONA DEL GATO
+========================= */
+
+.cat-container{
+    position:absolute;
+    left:50%;
+    bottom:25%;
+    transform:translateX(-50%);
+    width:260px;
+    height:260px;
+    display:flex;
+    justify-content:center;
+    align-items:flex-end;
+    z-index:20;
+}
+
+/* =========================
+   GATO PIXEL ART
+   ORIGINAL
+========================= */
+
+.cat{
+    width:220px;
+    height:220px;
+    image-rendering:pixelated;
+    image-rendering:crisp-edges;
+    filter:
+        drop-shadow(0 8px 0 rgba(0,0,0,.18))
+        drop-shadow(0 0 7px rgba(0,0,0,.15));
+}
+
+/* =========================
+   MENSAJE
+========================= */
+
+.message{
+    position:absolute;
+    left:50%;
+    bottom:8%;
+    transform:translateX(-50%);
+    z-index:30;
+
+    padding:13px 25px;
+
+    color:#fff4d1;
+    background:rgba(8,12,23,.76);
+
+    border:3px solid #596047;
+    box-shadow:
+        5px 5px 0 rgba(0,0,0,.35),
+        inset 0 0 0 2px #252d28;
+
+    font-size:18px;
+    font-weight:bold;
+    text-align:center;
+    white-space:nowrap;
+
+    image-rendering:pixelated;
+}
+
+.message span{
+    color:#f2b35c;
+}
+
+/* =========================
+   PIXEL LOOK
+========================= */
+
+.pixel{
+    shape-rendering:crispEdges;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:700px){
+
+    .moon{
+        width:60px;
+        height:60px;
+        right:7%;
+    }
+
+    .moon::after{
+        width:60px;
+        height:60px;
+    }
+
+    .cat-container{
+        bottom:27%;
+        transform:translateX(-50%) scale(.78);
+    }
+
+    .message{
+        bottom:6%;
+        font-size:14px;
+        padding:10px 14px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="game">
+
+    <!-- ESTRELLAS -->
+    <div class="star s1"></div>
+    <div class="star s2"></div>
+    <div class="star s3"></div>
+    <div class="star s4"></div>
+    <div class="star s5"></div>
+    <div class="star s6"></div>
+    <div class="star s7"></div>
+    <div class="star s8"></div>
+    <div class="star s9"></div>
+    <div class="star s10"></div>
+    <div class="star s11"></div>
+    <div class="star s12"></div>
+    <div class="star s13"></div>
+    <div class="star s14"></div>
+
+    <!-- LUNA -->
+    <div class="moon"></div>
+
+    <!-- NUBES -->
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+
+    <!-- MONTAÑAS -->
+    <div class="mountains">
+        <div class="mountain m1"></div>
+        <div class="mountain m2"></div>
+        <div class="mountain m3"></div>
+        <div class="mountain m4"></div>
+    </div>
+
+    <!-- ÁRBOLES -->
+    <div class="tree tree1"></div>
+    <div class="tree tree2"></div>
+    <div class="tree tree3"></div>
+    <div class="tree tree4"></div>
+
+    <!-- SUELO -->
+    <div class="ground"></div>
+    <div class="grass"></div>
+
+    <!-- =========================
+         GATO
+         32x32 PIXEL ART
+    ========================== -->
+
+    <div class="cat-container">
+
+        <svg
+            class="cat"
+            viewBox="0 0 32 32"
+            xmlns="http://www.w3.org/2000/svg"
+            shape-rendering="crispEdges"
+        >
+
+            <!-- =====================
+                 SOMBRA DEL GATO
+            ====================== -->
+
+            <rect x="6" y="29" width="20" height="1" fill="#0b0d0c"/>
+            <rect x="8" y="30" width="16" height="1" fill="#0b0d0c"/>
+
+
+            <!-- =====================
+                 COLA DETRÁS
+            ====================== -->
+
+            <!-- contorno -->
+            <path
+                d="
+                M24 20
+                H27
+                V19
+                H29
+                V20
+                H30
+                V24
+                H29
+                V27
+                H27
+                V29
+                H23
+                V27
+                H26
+                V25
+                H27
+                V22
+                H26
+                V21
+                H24
+                Z"
+                fill="#171719"
+            />
+
+            <!-- cola naranja -->
+            <path
+                d="
+                M25 21
+                H27
+                V20
+                H29
+                V24
+                H28
+                V27
+                H26
+                V28
+                H24
+                V27
+                H27
+                V24
+                H28
+                V22
+                H26
+                V23
+                H25
+                Z"
+                fill="#D87832"
+            />
+
+            <!-- punta clara -->
+            <rect x="27" y="20" width="2" height="2" fill="#F2AA4A"/>
+            <rect x="27" y="22" width="1" height="2" fill="#E28A38"/>
+
+
+            <!-- =====================
+                 CUERPO - CONTORNO
+            ====================== -->
+
+            <path
+                d="
+                M10 16
+                H22
+                V17
+                H24
+                V20
+                H25
+                V26
+                H24
+                V29
+                H19
+                V28
+                H13
+                V29
+                H8
+                V26
+                H7
+                V20
+                H8
+                V17
+                H10
+                Z"
+                fill="#171719"
+            />
+
+            <!-- =====================
+                 CUERPO NARANJA
+            ====================== -->
+
+            <path
+                d="
+                M11 17
+                H21
+                V18
+                H23
+                V21
+                H24
+                V26
+                H22
+                V28
+                H19
+                V27
+                H13
+                V28
+                H9
+                V26
+                H8
+                V21
+                H9
+                V18
+                H11
+                Z"
+                fill="#D87531"
+            />
+
+            <!-- sombreado lateral -->
+            <rect x="8" y="21" width="2" height="5" fill="#B75A2E"/>
+            <rect x="22" y="20" width="2" height="6" fill="#B75A2E"/>
+            <rect x="20" y="26" width="3" height="2" fill="#B75A2E"/>
+
+
+            <!-- =====================
+                 PECHO CREMA
+            ====================== -->
+
+            <path
+                d="
+                M13 18
+                H19
+                V19
+                H20
+                V24
+                H19
+                V26
+                H13
+                V24
+                H12
+                V20
+                H13
+                Z"
+                fill="#FFF0CC"
+            />
+
+            <rect x="13" y="19" width="6" height="5" fill="#FFF0CC"/>
+            <rect x="14" y="24" width="4" height="2" fill="#F2D9A9"/>
+
+
+            <!-- =====================
+                 PATAS
+            ====================== -->
+
+            <!-- pata izquierda -->
+            <path
+                d="
+                M9 24
+                H13
+                V28
+                H12
+                V29
+                H8
+                V27
+                H9
+                Z"
+                fill="#171719"
+            />
+
+            <path
+                d="
+                M10 24
+                H12
+                V28
+                H9
+                V27
+                H10
+                Z"
+                fill="#F7DFAE"
+            />
+
+            <!-- pata derecha -->
+            <path
+                d="
+                M19 24
+                H23
+                V27
+                H24
+                V29
+                H20
+                V28
+                H19
+                Z"
+                fill="#171719"
+            />
+
+            <path
+                d="
+                M20 24
+                H22
+                V28
+                H21
+                V27
+                H20
+                Z"
+                fill="#F7DFAE"
+            />
+
+
+            <!-- =====================
+                 CABEZA COMPLETA
+            ====================== -->
+
+            <!-- contorno -->
+            <path
+                d="
+                M7 5
+                H11
+                V6
+                H21
+                V5
+                H25
+                V7
+                H27
+                V11
+                H28
+                V18
+                H26
+                V20
+                H23
+                V22
+                H9
+                V20
+                H6
+                V18
+                H4
+                V11
+                H5
+                V7
+                H7
+                Z"
+                fill="#171719"
+            />
+
+
+            <!-- cabeza naranja -->
+            <path
+                d="
+                M8 6
+                H11
+                V7
+                H21
+                V6
+                H24
+                V8
+                H26
+                V12
+                H27
+                V17
+                H25
+                V19
+                H22
+                V21
+                H10
+                V19
+                H7
+                V17
+                H5
+                V12
+                H6
+                V8
+                H8
+                Z"
+                fill="#E78737"
+            />
+
+
+            <!-- =====================
+                 OREJAS
+            ====================== -->
+
+            <!-- oreja izquierda interior -->
+            <path
+                d="
+                M8 7
+                H10
+                V9
+                H11
+                V11
+                H7
+                V9
+                H8
+                Z"
+                fill="#E36E67"
+            />
+
+            <!-- oreja derecha interior -->
+            <path
+                d="
+                M22 7
+                H24
+                V9
+                H25
+                V11
+                H21
+                V9
+                H22
+                Z"
+                fill="#E36E67"
+            />
+
+            <!-- luz de orejas -->
+            <rect x="8" y="7" width="1" height="2" fill="#F6B27D"/>
+            <rect x="23" y="7" width="1" height="2" fill="#F6B27D"/>
+
+
+            <!-- =====================
+                 RAYAS DE LA CABEZA
+            ====================== -->
+
+            <!-- raya central -->
+            <rect x="15" y="7" width="2" height="3" fill="#B95A2D"/>
+            <rect x="14" y="7" width="1" height="2" fill="#C5642F"/>
+            <rect x="17" y="7" width="1" height="2" fill="#C5642F"/>
+
+            <!-- rayas izquierda -->
+            <rect x="10" y="9" width="2" height="1" fill="#B95A2D"/>
+            <rect x="9" y="10" width="2" height="1" fill="#B95A2D"/>
+            <rect x="8" y="11" width="2" height="1" fill="#B95A2D"/>
+
+            <!-- rayas derecha -->
+            <rect x="20" y="9" width="2" height="1" fill="#B95A2D"/>
+            <rect x="22" y="10" width="2" height="1" fill="#B95A2D"/>
+            <rect x="24" y="11" width="2" height="1" fill="#B95A2D"/>
+
+
+            <!-- =====================
+                 MEJILLAS CREMA
+            ====================== -->
+
+            <path
+                d="
+                M8 14
+                H12
+                V13
+                H15
+                V16
+                H17
+                V13
+                H20
+                V14
+                H24
+                V18
+                H22
+                V20
+                H10
+                V18
+                H8
+                Z"
+                fill="#FFF0CC"
+            />
+
+            <!-- sombras de mejillas -->
+            <rect x="8" y="16" width="2" height="2" fill="#E6C994"/>
+            <rect x="22" y="16" width="2" height="2" fill="#E6C994"/>
+
+
+            <!-- =====================
+                 OJOS
+            ====================== -->
+
+            <!-- ojo izquierdo -->
+            <path
+                d="
+                M9 12
+                H13
+                V13
+                H14
+                V16
+                H13
+                V17
+                H9
+                V16
+                H8
+                V13
+                H9
+                Z"
+                fill="#171719"
+            />
+
+            <!-- ojo derecho -->
+            <path
+                d="
+                M18 13
+                H19
+                V12
+                H23
+                V13
+                H24
+                V16
+                H23
+                V17
+                H19
+                V16
+                H18
+                Z"
+                fill="#171719"
+            />
+
+            <!-- iris / reflejo -->
+            <rect x="10" y="13" width="2" height="2" fill="#FFF8DD"/>
+            <rect x="20" y="13" width="2" height="2" fill="#FFF8DD"/>
+
+            <rect x="12" y="15" width="1" height="1" fill="#6E432F"/>
+            <rect x="20" y="15" width="1" height="1" fill="#6E432F"/>
+
+
+            <!-- =====================
+                 NARIZ
+            ====================== -->
+
+            <rect x="15" y="16" width="2" height="1" fill="#5A3028"/>
+            <rect x="14" y="17" width="4" height="1" fill="#5A3028"/>
+
+
+            <!-- =====================
+                 BOCA
+            ====================== -->
+
+            <rect x="15" y="18" width="1" height="1" fill="#171719"/>
+            <rect x="17" y="18" width="1" height="1" fill="#171719"/>
+
+            <rect x="13" y="18" width="2" height="1" fill="#171719"/>
+            <rect x="18" y="18" width="2" height="1" fill="#171719"/>
+
+
+            <!-- =====================
+                 BIGOTES
+            ====================== -->
+
+            <rect x="5" y="15" width="3" height="1" fill="#F5DDAE"/>
+            <rect x="4" y="17" width="4" height="1" fill="#F5DDAE"/>
+            <rect x="24" y="15" width="3" height="1" fill="#F5DDAE"/>
+            <rect x="24" y="17" width="4" height="1" fill="#F5DDAE"/>
+
+
+            <!-- =====================
+                 RAYAS DEL CUERPO
+            ====================== -->
+
+            <rect x="10" y="18" width="2" height="1" fill="#B95A2D"/>
+            <rect x="20" y="18" width="2" height="1" fill="#B95A2D"/>
+
+            <rect x="9" y="20" width="2" height="1" fill="#B95A2D"/>
+            <rect x="21" y="20" width="2" height="1" fill="#B95A2D"/>
+
+            <rect x="9" y="22" width="2" height="1" fill="#B95A2D"/>
+            <rect x="21" y="22" width="2" height="1" fill="#B95A2D"/>
+
+
+            <!-- =====================
+                 DETALLES DEL PELO
+            ====================== -->
+
+            <rect x="7" y="11" width="1" height="2" fill="#F2A047"/>
+            <rect x="25" y="11" width="1" height="2" fill="#F2A047"/>
+
+            <rect x="11" y="8" width="1" height="1" fill="#F5A347"/>
+            <rect x="20" y="8" width="1" height="1" fill="#F5A347"/>
+
+        </svg>
+
+    </div>
+
+
+    <!-- MENSAJE -->
+    <div class="message">
+        <span>Perdón.</span> Mis acciones fueron malas 
+    </div>
+
+</div>
+
+</body>
+</html>
